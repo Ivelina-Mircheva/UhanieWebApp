@@ -21,7 +21,7 @@ namespace UhanieWebApp.Controllers
         // GET: OrderBouquets
         public async Task<IActionResult> Index()
         {
-            var uhanieDbContext = _context.OrderBouquets.Include(o => o.Bouquet).Include(o => o.Customer);
+            var uhanieDbContext = _context.OrderBouquets.Include(o => o.Bouquets).Include(o => o.Customer);
             return View(await uhanieDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace UhanieWebApp.Controllers
             }
 
             var orderBouquet = await _context.OrderBouquets
-                .Include(o => o.Bouquet)
+                .Include(o => o.Bouquets)
                 .Include(o => o.Customer)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderBouquet == null)
@@ -135,7 +135,7 @@ namespace UhanieWebApp.Controllers
             }
 
             var orderBouquet = await _context.OrderBouquets
-                .Include(o => o.Bouquet)
+                .Include(o => o.Bouquets)
                 .Include(o => o.Customer)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderBouquet == null)

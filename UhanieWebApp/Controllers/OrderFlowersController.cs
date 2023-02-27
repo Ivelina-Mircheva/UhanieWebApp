@@ -21,7 +21,7 @@ namespace UhanieWebApp.Controllers
         // GET: OrderFlowers
         public async Task<IActionResult> Index()
         {
-            var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flower);
+            var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flowers);
             return View(await uhanieDbContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace UhanieWebApp.Controllers
 
             var orderFlower = await _context.OrderFlowers
                 .Include(o => o.Customer)
-                .Include(o => o.Flower)
+                .Include(o => o.Flowers)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderFlower == null)
             {
@@ -136,7 +136,7 @@ namespace UhanieWebApp.Controllers
 
             var orderFlower = await _context.OrderFlowers
                 .Include(o => o.Customer)
-                .Include(o => o.Flower)
+                .Include(o => o.Flowers)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orderFlower == null)
             {
