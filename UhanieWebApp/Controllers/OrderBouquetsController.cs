@@ -48,7 +48,7 @@ namespace UhanieWebApp.Controllers
         // GET: OrderBouquets/Create
         public IActionResult Create()
         {
-            ViewData["BouquetId"] = new SelectList(_context.Bouquets, "Id", "Id");
+            ViewData["BouquetId"] = new SelectList(_context.Bouquets, "Id", "Name");
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -58,7 +58,7 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BouquetId,CustomerId,Quantity,RegisterOn")] OrderBouquet orderBouquet)
+        public async Task<IActionResult> Create([Bind("BouquetId,CustomerId,Quantity,RegisterOn")] OrderBouquet orderBouquet)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace UhanieWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(orderBouquet);
+                    _context.OrderBouquets.Update(orderBouquet);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

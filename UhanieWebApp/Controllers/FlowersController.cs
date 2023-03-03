@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +45,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Flowers/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -53,11 +56,12 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BulgarianName,LatinName,Size,Description,ImageURL,Price,RegisterOn")] Flower flower)
+        public async Task<IActionResult> Create([Bind("BulgarianName,LatinName,Size,Description,ImageURL,Price")] Flower flower)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(flower);
+                flower.RegisterOn = DateTime.Now;
+                _context.Flowers.Add(flower);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -65,6 +69,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Flowers/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Flowers == null)
@@ -85,7 +90,7 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BulgarianName,LatinName,Size,Description,ImageURL,Price,RegisterOn")] Flower flower)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BulgarianName,LatinName,Size,Description,ImageURL,Price")] Flower flower)
         {
             if (id != flower.Id)
             {
@@ -96,7 +101,8 @@ namespace UhanieWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(flower);
+                    flower.RegisterOn = DateTime.Now;
+                    _context.Flowers.Update(flower);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -116,6 +122,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Flowers/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Flowers == null)

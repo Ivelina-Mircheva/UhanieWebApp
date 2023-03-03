@@ -101,6 +101,7 @@ namespace UhanieWebApp.Areas.Identity.Pages.Account
                 user.Email=Input.Email;
                 user.UserName=Input.UserName;
                 user.LastName=Input.LastName;
+                user.RegisterOn = DateTime.Now;
 
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -109,6 +110,7 @@ namespace UhanieWebApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, "User");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

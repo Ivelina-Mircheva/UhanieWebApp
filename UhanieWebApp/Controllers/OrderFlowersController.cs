@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,22 @@ namespace UhanieWebApp.Controllers
     public class OrderFlowersController : Controller
     {
         private readonly UhanieDbContext _context;
+        private readonly UserManager<Customer> _userManager;
+        //private readonly SignInManager<User> _sigInManager;
+        //private readonly RoleManager<IdentityRole> _roleManager;
 
-        public OrderFlowersController(UhanieDbContext context)
+
+        public OrderFlowersController(UhanieDbContext context,
+                                UserManager<Customer> userManager
+                                /*RoleManager<IdentityRole> roleManager*/)
         {
             _context = context;
+            _userManager = userManager;
+            //_roleManager = roleManager
         }
 
-        // GET: OrderFlowers
-        public async Task<IActionResult> Index()
+            // GET: OrderFlowers
+            public async Task<IActionResult> Index()
         {
             var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flowers);
             return View(await uhanieDbContext.ToListAsync());
@@ -48,8 +57,8 @@ namespace UhanieWebApp.Controllers
         // GET: OrderFlowers/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "Id");
+            //ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "BulgarianName");
             return View();
         }
 
@@ -58,16 +67,18 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FlowerId,CustomerId,Quantity,RegisterOn")] OrderFlower orderFlower)
+        public async Task<IActionResult> Create([Bind("FlowerId,Quantity")] OrderFlower orderFlower)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orderFlower);
+                orderFlower.RegisterOn = DateTime.Now;
+                orderFlower.CustomerId = _userManager.GetUserId(User);
+                _context.OrderFlowers.Add(orderFlower);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
-            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "Id", orderFlower.FlowerId);
+            //ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
+            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "BulgarianName", orderFlower.FlowerId);
             return View(orderFlower);
         }
 
@@ -84,8 +95,8 @@ namespace UhanieWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
-            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "Id", orderFlower.FlowerId);
+            //ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
+            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "BulgarianName", orderFlower.FlowerId);
             return View(orderFlower);
         }
 
@@ -94,7 +105,7 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FlowerId,CustomerId,Quantity,RegisterOn")] OrderFlower orderFlower)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FlowerId,Quantity")] OrderFlower orderFlower)
         {
             if (id != orderFlower.Id)
             {
@@ -105,7 +116,9 @@ namespace UhanieWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(orderFlower);
+                    orderFlower.RegisterOn = DateTime.Now;
+                    orderFlower.CustomerId = _userManager.GetUserId(User);
+                    _context.OrderFlowers.Update(orderFlower);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -121,8 +134,8 @@ namespace UhanieWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
-            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "Id", orderFlower.FlowerId);
+            //ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", orderFlower.CustomerId);
+            ViewData["FlowerId"] = new SelectList(_context.Flowers, "Id", "BulgarianName", orderFlower.FlowerId);
             return View(orderFlower);
         }
 

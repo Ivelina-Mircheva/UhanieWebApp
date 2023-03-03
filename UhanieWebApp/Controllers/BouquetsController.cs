@@ -53,7 +53,7 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Type,Description,ImageURL,Price,RegisterOn")] Bouquet bouquet)
+        public async Task<IActionResult> Create([Bind("Name,Type,Description,ImageURL,Price,RegisterOn")] Bouquet bouquet)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace UhanieWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(bouquet);
+                    _context.Bouquets.Update(bouquet);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
