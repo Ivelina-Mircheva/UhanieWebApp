@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Bouquets/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -53,11 +55,12 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Type,Description,ImageURL,Price,RegisterOn")] Bouquet bouquet)
+        public async Task<IActionResult> Create([Bind("Name,Type,Description,ImageURL,Price")] Bouquet bouquet)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bouquet);
+                bouquet.RegisterOn = DateTime.Now;
+                _context.Bouquets.Add(bouquet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -65,6 +68,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Bouquets/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Bouquets == null)
@@ -85,7 +89,7 @@ namespace UhanieWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,Description,ImageURL,Price,RegisterOn")] Bouquet bouquet)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,Description,ImageURL,Price")] Bouquet bouquet)
         {
             if (id != bouquet.Id)
             {
@@ -96,6 +100,7 @@ namespace UhanieWebApp.Controllers
             {
                 try
                 {
+                    bouquet.RegisterOn = DateTime.Now;
                     _context.Bouquets.Update(bouquet);
                     await _context.SaveChangesAsync();
                 }
@@ -116,6 +121,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Bouquets/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Bouquets == null)

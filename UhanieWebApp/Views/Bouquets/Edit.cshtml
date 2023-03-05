@@ -1,4 +1,5 @@
-﻿@model UhanieWebApp.Data.Bouquet
+﻿@using UhanieWebApp.Data;
+@model UhanieWebApp.Data.Bouquet
 
 @{
     ViewData["Title"] = "Edit";
@@ -20,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control"></select>
+                <select asp-for="Type" class="form-control" asp-items="@Html.GetEnumSelectList<BouquetType>()"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,11 +39,11 @@
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="RegisterOn" class="control-label"></label>
                 <input asp-for="RegisterOn" class="form-control" />
                 <span asp-validation-for="RegisterOn" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
