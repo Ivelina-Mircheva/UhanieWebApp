@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Поръчки</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,19 +14,20 @@
         <tr>
             <th>
                 @*@Html.DisplayNameFor(model => model.Flowers)*@
-                Articul
+                Цвете
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customer)
+                @*@Html.DisplayNameFor(model => model.Customer)*@
+                Клиент
             </th>
             <th>
-                Quantity
+                Количество
             </th>
             <th>
-                Price
+                Единична цена
             </th>
             <th>
-                Total Price
+                Обща сума
             </th>
             @*<th>
                 @Html.DisplayNameFor(model => model.RegisterOn)
