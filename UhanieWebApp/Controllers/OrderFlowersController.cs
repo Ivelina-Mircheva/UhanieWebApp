@@ -27,11 +27,20 @@ namespace UhanieWebApp.Controllers
             //_roleManager = roleManager
         }
 
-            // GET: OrderFlowers
-            public async Task<IActionResult> Index()
+        // GET: OrderFlowers
+        public async Task<IActionResult> Index()
         {
-            var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flowers);
-            return View(await uhanieDbContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flowers);
+                return View(await uhanieDbContext.ToListAsync());
+            }
+            else
+            {
+                var uhanieDbContext = _context.OrderFlowers.Include(o => o.Customer).Include(o => o.Flowers)
+                    .Where(o => o.CustomerId == _userManager.GetUserId(User));
+                return View(await uhanieDbContext.ToListAsync());
+            }
         }
 
         // GET: OrderFlowers/Details/5
@@ -173,14 +182,14 @@ namespace UhanieWebApp.Controllers
             {
                 _context.OrderFlowers.Remove(orderFlower);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrderFlowerExists(int id)
         {
-          return _context.OrderFlowers.Any(e => e.Id == id);
+            return _context.OrderFlowers.Any(e => e.Id == id);
         }
     }
 }

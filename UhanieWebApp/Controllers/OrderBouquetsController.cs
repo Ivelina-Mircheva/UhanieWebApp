@@ -30,8 +30,17 @@ namespace UhanieWebApp.Controllers
         // GET: OrderBouquets
         public async Task<IActionResult> Index()
         {
-            var uhanieDbContext = _context.OrderBouquets.Include(o => o.Bouquets).Include(o => o.Customer);
-            return View(await uhanieDbContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                var uhanieDbContext = _context.OrderBouquets.Include(o => o.Bouquets).Include(o => o.Customer);
+                return View(await uhanieDbContext.ToListAsync());
+            }
+            else
+            {
+                var uhanieDbContext = _context.OrderBouquets.Include(o => o.Bouquets).Include(o => o.Customer)
+                    .Where(o => o.CustomerId == _userManager.GetUserId(User));
+                return View(await uhanieDbContext.ToListAsync());
+            }
         }
 
         // GET: OrderBouquets/Details/5
