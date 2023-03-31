@@ -52,7 +52,7 @@ namespace UhanieWebApp.Services
             {
                 UserName = "superadmin",
                 Email = "superadmin@gmail.com",
-                LastName = "Belezireva",
+                LastName = "Mircheva",
                 PhoneNumber = "0899999999",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
