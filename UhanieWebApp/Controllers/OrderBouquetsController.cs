@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -64,6 +65,7 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: OrderBouquets/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["BouquetId"] = new SelectList(_context.Bouquets, "Id", "Name");
