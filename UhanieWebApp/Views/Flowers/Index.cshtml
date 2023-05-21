@@ -17,6 +17,14 @@
     }
 </h1>
 
+@using (Html.BeginForm())
+{
+    <h4 style="padding:3px;">
+        @*@Html.TextBox("SearchString")*@
+        <input type="search" name="SearchString">
+        <input type="submit" class="btn btn-success" value="Search" />
+    </h4>
+}
 <br />
 
 <div class="container">

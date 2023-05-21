@@ -21,9 +21,15 @@ namespace UhanieWebApp.Controllers
         }
 
         // GET: Flowers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-              return View(await _context.Flowers.ToListAsync());
+            var flowers = from s in _context.Flowers
+                          select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                flowers = flowers.Where(s => s.BulgarianName.Contains(searchString));
+            }
+            return View(flowers.ToList()); //return View(await _context.Flowers.ToListAsync());
         }
 
         // GET: Flowers/Details/5
