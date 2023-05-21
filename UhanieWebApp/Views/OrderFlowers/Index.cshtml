@@ -1,4 +1,5 @@
-﻿@model IEnumerable<UhanieWebApp.Data.OrderFlower>
+﻿<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+@model IEnumerable<UhanieWebApp.Data.OrderFlower>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,9 +7,13 @@
 
 <h1>Поръчки</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -23,9 +28,9 @@
             <th>
                 Количество
             </th>
-            <th>
+            @*<th>
                 Единична цена
-            </th>
+            </th>*@
             <th>
                 Обща сума
             </th>
@@ -48,25 +53,24 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Flowers.Price)
-                </td>
+                </td>*@
                 <td>
-                    @(item.Quantity * item.Flowers.Price)
+                    @(item.Quantity * item.Flowers.Price) лв.
                 </td>
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="far" style="text-decoration:none;">&#xf044;</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="fas" style="text-decoration:none;">&#xf2ed;</a>
                     </td>
                 }
                 else
                 {
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">Детайли</a> 
                     </td>
                 }
             </tr>
